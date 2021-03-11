@@ -76,9 +76,24 @@ public class Controller {
             int x = (int)reverso.pop().charAt(0) + 2;
             int y = (int)original.pop().charAt(0);
 
-            if (!(x == y || x - 1 == y))
-                showActivity.appendText("La expresion matematica es incorrecta."  + "\n");
+            if (!(x == y || x - 1 == y)) {
+                showActivity.appendText("La expresion matematica es incorrecta." + "\n");
+                return;
+            }
         }
         showActivity.appendText("La expresion matematica es correcta." + "\n");
+    }
+
+    void verify() {
+        String string = inputVerify.getText();
+        Stack<Character> s1 = new Stack<>();
+        Stack<Character> s2 = new Stack<>();
+
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) == '(')
+                s1.push(string.charAt(i));
+            else if (string.charAt(i) == ')')
+                s2.push(string.charAt(i));
+        }
     }
 }
