@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class Controller {
@@ -63,37 +65,35 @@ public class Controller {
     @FXML
     void verifyExpression() {
         String string = inputVerify.getText();
-        Stack<String> original = new Stack<>();
-        Stack<String> reverso = new Stack<>();
+        Stack<String> open = new Stack<>();
+        Stack<String> close = new Stack<>();
 
-        for (int i = 0; i < string.length(); i++)
-            original.push(string.substring(i, i + 1));
-
-        for (int i = string.length(); i > 0; i--)
-            reverso.push(string.substring(i - 1, i));
-
-        for (int i = 0; i < string.length()/2; i++) {
-            int x = (int)reverso.pop().charAt(0) + 2;
-            int y = (int)original.pop().charAt(0);
-
-            if (!(x == y || x - 1 == y)) {
-                showActivity.appendText("La expresion matematica es incorrecta." + "\n");
-                return;
+        try {
+            for (int i = 0; i < string.length(); i++) {
+                if (string.charAt(i) == '(')
+                    open.push(string.substring(i, i + 1));
+                else if (string.charAt(i) == ')')
+                    close.push(string.substring(i - 1, i));
+                if (string.charAt(i) == '(')
+                    if (string.charAt(i + 1) == ')') {
+                        showActivity.appendText("La expresion matematica es incorrecta." + "\n");
+                        return;
+                    }
+                else if (string.charAt(i) == ')')
+                    if (string.charAt(i + 1) == '(') {
+                        showActivity.appendText("La expresion matematica es incorrecta." + "\n");
+                        return;
+                    }
             }
+        } catch (StringIndexOutOfBoundsException e) {
+            showActivity.appendText("La expresion matematica es incorrecta." + "\n");
+            return;
+        }
+
+        if (open.size() != close.size() || open.size() == 0) {
+            showActivity.appendText("La expresion matematica es incorrecta." + "\n");
+            return;
         }
         showActivity.appendText("La expresion matematica es correcta." + "\n");
-    }
-
-    void verify() {
-        String string = inputVerify.getText();
-        Stack<Character> s1 = new Stack<>();
-        Stack<Character> s2 = new Stack<>();
-
-        for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == '(')
-                s1.push(string.charAt(i));
-            else if (string.charAt(i) == ')')
-                s2.push(string.charAt(i));
-        }
     }
 }
